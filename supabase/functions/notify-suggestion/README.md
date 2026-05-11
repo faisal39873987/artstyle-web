@@ -7,7 +7,7 @@ Required secrets:
 ```sh
 supabase secrets set \
   SUPPORT_EMAIL=opensea3987@gmail.com \
-  SUPABASE_SERVICE_ROLE_KEY=... \
+  SUPABASE_SECRET_KEY=... \
   RESEND_API_KEY=... \
   FROM_EMAIL="Art Style Apps <hello@your-domain.com>"
 ```
@@ -15,7 +15,7 @@ supabase secrets set \
 Deploy:
 
 ```sh
-supabase functions deploy notify-suggestion
+supabase functions deploy notify-suggestion --no-verify-jwt
 ```
 
 Client flow:

@@ -8,11 +8,12 @@
 - Enable Google provider.
 - Enable Apple provider only after Services ID and Apple secret are ready.
 - Set Edge Function secrets:
-  - `SUPABASE_SERVICE_ROLE_KEY`
+  - `SUPABASE_SECRET_KEY`
   - `SUPPORT_EMAIL`
   - `RESEND_API_KEY`
   - `FROM_EMAIL`
-- Deploy `notify-suggestion`.
+- Deploy `notify-suggestion` with `--no-verify-jwt` or keep `[functions.notify-suggestion].verify_jwt = false`.
+- Enable Google and Apple providers in Supabase Auth; current hosted settings still show both disabled.
 - Test anon:
   - can read public apps.
   - can insert suggestions.

@@ -44,12 +44,12 @@ Deno.serve(async (req) => {
   }
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
-  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  const secretKey = Deno.env.get("SUPABASE_SECRET_KEY") ?? Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
   const resendApiKey = Deno.env.get("RESEND_API_KEY");
   const supportEmail = Deno.env.get("SUPPORT_EMAIL") ?? "opensea3987@gmail.com";
   const fromEmail = Deno.env.get("FROM_EMAIL") ?? "Art Style Apps <onboarding@resend.dev>";
 
-  if (!supabaseUrl || !serviceRoleKey) {
+  if (!supabaseUrl || !secretKey) {
     return json({ error: "Missing Supabase service configuration" }, 500);
   }
 
@@ -68,8 +68,7 @@ Deno.serve(async (req) => {
     `${supabaseUrl}/rest/v1/suggestions?id=eq.${payload.suggestion_id}&select=id,name,email,kind,subject,message,source_url,email_to,created_at,apps(name)`,
     {
       headers: {
-        apikey: serviceRoleKey,
-        authorization: `Bearer ${serviceRoleKey}`,
+        apikey: secretKey,
         accept: "application/vnd.pgrst.object+json",
       },
     },
