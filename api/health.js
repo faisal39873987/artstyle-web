@@ -1,47 +1,38 @@
-const SUPABASE_URL = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
-const SUPABASE_KEY =
-  process.env.SUPABASE_SECRET_KEY ||
-  process.env.SUPABASE_SERVICE_ROLE_KEY ||
-  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+import { hasSupabaseConfig, json, parseSupabaseError, supabaseFetch } from "./_supabase.js";
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
-    res.status(405).json({ ok: false, message: "Method not allowed" });
+    json(res, 405, { ok: false, message: "Method not allowed" });
     return;
   }
 
-  if (!SUPABASE_URL || !SUPABASE_KEY) {
-    res.status(200).json({
+  if (!hasSupabaseConfig({ requireServerKey: false })) {
+    json(res, 200, {
       ok: false,
       message: "Vercel environment variables are not configured yet.",
     });
     return;
   }
 
-  const response = await fetch(`${SUPABASE_URL}/rest/v1/apps?select=slug,name&limit=1`, {
-    headers: {
-      apikey: SUPABASE_KEY,
-    },
-  });
+  const response = await supabaseFetch(
+    "/rest/v1/backend_public_status?select=public_apps,release_rows,checked_at&limit=1",
+    {},
+    { requireServerKey: false },
+  );
 
   if (!response.ok) {
-    let detail = "";
-    try {
-      const error = await response.json();
-      detail = error.message ? ` ${error.message}` : "";
-    } catch {
-      detail = "";
-    }
-    res.status(200).json({
+    json(res, 200, {
       ok: false,
-      message: `Supabase is reachable, but the schema is not ready.${detail}`,
+      message: `Supabase is reachable, but backend round five is not applied. ${await parseSupabaseError(response, "")}`.trim(),
     });
     return;
   }
 
   const rows = await response.json();
-  res.status(200).json({
+  const status = rows[0] || {};
+  json(res, 200, {
     ok: true,
-    message: `Supabase schema is live. Apps endpoint returned ${rows.length} row(s).`,
+    message: `Supabase backend is live. ${status.public_apps ?? 0} public app(s), ${status.release_rows ?? 0} release row(s).`,
+    checked_at: status.checked_at,
   });
 }

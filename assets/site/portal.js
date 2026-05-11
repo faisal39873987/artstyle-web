@@ -145,13 +145,16 @@ const initials = (name) =>
     .toUpperCase();
 
 function normalizeApp(app) {
+  const rawMedia = app.app_media || app.media || [];
+  const media = rawMedia
+    .filter((item) => (typeof item === "string" ? item : item?.path))
+    .sort((a, b) => ((a.sort_order || 100) - (b.sort_order || 100)))
+    .map((item) => (typeof item === "string" ? item : item.path));
+
   return {
     ...app,
     releases: app.app_releases || app.releases || [],
-    media:
-      app.app_media?.filter((item) => item.path).sort((a, b) => (a.sort_order || 100) - (b.sort_order || 100)).map((item) => item.path) ||
-      app.media ||
-      [],
+    media,
   };
 }
 
@@ -186,6 +189,18 @@ function filteredApps() {
 }
 
 async function loadApps() {
+  try {
+    const response = await fetch("/api/apps");
+    const payload = await response.json();
+    if (response.ok && Array.isArray(payload.apps) && payload.apps.length) {
+      state.apps = payload.apps.map(normalizeApp);
+      state.source = "supabase-api";
+      return;
+    }
+  } catch {
+    // Static local previews can still fall back to direct Supabase or bundled data.
+  }
+
   const { data, error } = await supabase
     .from("apps")
     .select("*, app_releases(*), app_media(*), app_page_sections(*), app_download_links(*)")
@@ -193,7 +208,7 @@ async function loadApps() {
 
   if (!error && Array.isArray(data) && data.length) {
     state.apps = data.map(normalizeApp);
-    state.source = "supabase";
+    state.source = "supabase-client";
   } else {
     state.apps = fallbackApps.map(normalizeApp);
     state.source = "local";
@@ -215,7 +230,7 @@ function renderHome() {
   view.innerHTML = `
     <section class="hero">
       <div>
-        <p class="eyebrow">${state.source === "supabase" ? "Live Supabase catalog" : "Local preview catalog"}</p>
+        <p class="eyebrow">${state.source.includes("supabase") ? "Live Supabase catalog" : "Local preview catalog"}</p>
         <h1>Art Style Apps</h1>
         <p class="hero-copy">A clean product library for the app portfolio: pages, screenshots, release status, optional sign-in, visitor suggestions, and a safe path for reviewed playable files.</p>
         <div class="hero-actions">
@@ -425,23 +440,50 @@ function renderPlan() {
 
 async function renderBackend() {
   view.innerHTML = `
-    <section class="section"><div class="page-title"><p class="eyebrow">Supabase</p><h2>Backend status</h2><p>The frontend has the project URL and publishable key. Hosted schema deployment needs SQL access through Supabase CLI or dashboard SQL editor.</p></div></section>
+    <section class="section"><div class="page-title"><p class="eyebrow">Supabase</p><h2>Backend status</h2><p>Production backend status, app catalog counts, suggestion routing, and the five-task backend work queue.</p></div></section>
     <section class="section">
       <div class="split">
         <div class="panel"><h3>Live check</h3><div class="status-box" data-health>Checking Supabase API...</div></div>
-        <div class="panel"><h3>Required credentials</h3><p>Publishable keys are for browsers. Secret keys are server-side API keys. Applying migrations still needs a database password, connection string, or Supabase access token plus DB password.</p></div>
+        <div class="panel"><h3>Round Five</h3><div class="stack" data-backend-tasks><div class="status-box">Loading backend tasks...</div></div></div>
       </div>
     </section>
   `;
   const health = view.querySelector("[data-health]");
+  const tasks = view.querySelector("[data-backend-tasks]");
   try {
-    const response = await fetch("/api/health");
-    const data = await response.json();
+    const [healthResponse, statusResponse] = await Promise.all([
+      fetch("/api/health"),
+      fetch("/api/backend-status"),
+    ]);
+    const data = await healthResponse.json();
+    const statusData = await statusResponse.json();
     health.className = `status-box ${data.ok ? "success" : "error"}`;
     health.textContent = data.message;
+    if (statusResponse.ok && statusData.ok) {
+      const status = statusData.status || {};
+      const rows = [
+        ["Public apps", status.public_apps],
+        ["Release rows", status.release_rows],
+        ["Team members", status.public_team_members],
+        ["Suggestions 7 days", status.suggestions_last_7_days],
+        ["Email provider", statusData.email_provider_configured ? "Configured" : "Pending Resend key"],
+      ];
+      health.innerHTML = `
+        <div class="stack">
+          ${rows.map(([label, value]) => `<div class="status-box success"><strong>${esc(label)}</strong> ${esc(value ?? 0)}</div>`).join("")}
+        </div>
+      `;
+      tasks.innerHTML = statusData.backend_tasks
+        .slice(0, 5)
+        .map((task) => `<div class="status-box"><strong>${esc(task.title)}</strong><br />${esc(normalizeStatus(task.status))} · ${esc(task.priority)}</div>`)
+        .join("");
+    } else {
+      tasks.innerHTML = `<div class="status-box error">${esc(statusData.message || "Backend status API is not ready.")}</div>`;
+    }
   } catch {
     health.className = "status-box error";
     health.textContent = "Health API is not available in this environment.";
+    tasks.innerHTML = `<div class="status-box error">Backend task report is not available.</div>`;
   }
 }
 

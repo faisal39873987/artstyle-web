@@ -3,63 +3,48 @@
 ## ما تم
 
 - استبدال صفحة البداية بـ portal أبيض احترافي بدل شاشة Flutter build المباشرة.
-- إضافة app catalog قابل للعمل من Supabase بعد تشغيل migrations، ومعه fallback محلي حتى لا يتعطل الموقع.
+- ربط الكتالوج بـ Supabase مع fallback محلي.
 - إضافة صفحات:
   - `/` التطبيقات.
   - `/apps/:slug` صفحة لكل تطبيق.
   - `/team` توزيع الفريق.
   - `/plan` خطة التنفيذ.
-  - `/backend` حالة Supabase.
-- إضافة API routes لـ Vercel:
+  - `/backend` حالة Supabase والباكند.
+- إضافة Vercel API routes:
   - `/api/health`
+  - `/api/apps`
+  - `/api/backend-status`
   - `/api/suggestions`
-- تحديث Edge Function `notify-suggestion` لتستخدم `SUPABASE_SECRET_KEY` بدل افتراض `service_role` القديم.
+- تطبيق migrations على Supabase وربط المشروع.
+- نشر Edge Function `notify-suggestion`.
+- نشر Production على Vercel:
+  - `https://artstyle-web.vercel.app`
+- دفع التغييرات إلى GitHub:
+  - `https://github.com/faisal39873987/artstyle-web.git`
 - إبقاء ملفات ROM وcovers غير المراجعة خارج Git public head.
 
 ## حالة Supabase الحقيقية الآن
 
 - المشروع `https://asplwsmyacuttbdjtgbk.supabase.co` يرد من الـ API.
-- جدول `public.apps` غير موجود حتى الآن، لذلك migrations لم تطبق بعد.
-- Google وApple Auth غير مفعلة في Supabase Auth settings حتى الآن.
+- جداول `public.apps` و`public.app_releases` و`public.suggestions` موجودة.
+- بيانات التطبيقات والفريق والخدمات مزروعة.
+- RLS مفعل على الجداول الأساسية.
+- Google وApple Auth تحتاج تفعيل يدوي من لوحة Supabase لأن كل مزود يحتاج OAuth credentials خاصة.
 
-## المطلوب لتطبيق الباكند
+## الجولة الخلفية الخامسة
 
-مفاتيح `sb_publishable` و`sb_secret` لا تكفي لتشغيل SQL migrations. نحتاج واحد من التالي:
+- إضافة view آمن للكتالوج: `public.app_catalog_public`.
+- إضافة view حالة عامة: `public.backend_public_status`.
+- إضافة حماية rate limit للاقتراحات.
+- إضافة dedupe key لمنع تكرار نفس الاقتراح.
+- إضافة تتبع إرسال الإشعارات:
+  - `notified_at`
+  - `notification_attempts`
+  - `last_notification_error`
 
-- Supabase Access Token + database password ثم:
+## المتبقي
 
-```sh
-supabase link --project-ref asplwsmyacuttbdjtgbk
-supabase db push
-```
-
-- أو direct Postgres connection string ثم:
-
-```sh
-supabase db push --db-url "<postgres-url>"
-```
-
-- أو تنفيذ ملفات SQL من مجلد `supabase/migrations` في Supabase SQL Editor.
-
-## Vercel Environment Variables
-
-لا تحفظ القيم السرية داخل Git. ضعها في Vercel:
-
-```sh
-NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
-SUPABASE_URL=
-SUPABASE_SECRET_KEY=
-ARTSTYLE_SUPABASE_SECRET_KEY=
-SUPPORT_EMAIL=opensea3987@gmail.com
-RESEND_API_KEY=
-FROM_EMAIL=
-```
-
-## أولوية الفريق
-
-الأهم الآن فعليًا:
-
-- Flutter Frontend Engineer لاسترجاع سورس Flutter الأصلي وربط onboarding/navigation/login.
-- UI/UX Designer لتثبيت صفحة التطبيقات والتفاصيل والاقتراحات في Figma.
-- Backend Developer لتطبيق migrations، تفعيل OAuth، وضبط الإيميل.
+- إضافة `RESEND_API_KEY` في Supabase secrets حتى يتم إرسال الإيميل فعليًا.
+- تفعيل Google Provider وApple Provider في Supabase Auth.
+- استرجاع سورس Flutter الأصلي إذا نبي نربط login/onboarding داخل التطبيق نفسه.
+- تأكيد روابط App Store وGoogle Play الرسمية لكل تطبيق.

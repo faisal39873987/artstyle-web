@@ -1,112 +1,176 @@
-const SUPABASE_URL = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
-const SUPABASE_SECRET_KEY = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
+import {
+  cleanString,
+  getClientIp,
+  getHeader,
+  hashValue,
+  hasSupabaseConfig,
+  isEmail,
+  json,
+  parseSupabaseError,
+  readJsonBody,
+  supabaseFetch,
+  SUPABASE_SERVER_KEY,
+  SUPABASE_URL,
+} from "./_supabase.js";
+
 const SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || "opensea3987@gmail.com";
-const RESEND_API_KEY = process.env.RESEND_API_KEY;
-const FROM_EMAIL = process.env.FROM_EMAIL || "Art Style Apps <onboarding@resend.dev>";
+const ALLOWED_KINDS = new Set(["feature", "bug", "design", "store", "support", "partnership", "other"]);
 
-function cleanString(value, max = 4000) {
-  if (typeof value !== "string") return null;
-  const trimmed = value.trim();
-  return trimmed ? trimmed.slice(0, max) : null;
+function normalizeKind(kind) {
+  const value = cleanString(kind, 40)?.toLowerCase() || "feature";
+  return ALLOWED_KINDS.has(value) ? value : "other";
 }
 
-function isEmail(value) {
-  return !value || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+function duplicateKey(payload, ipHash) {
+  const stableParts = [
+    payload.app_slug || "general",
+    payload.email || "guest",
+    ipHash || "unknown",
+    payload.kind,
+    (payload.subject || "").toLowerCase(),
+    payload.message.toLowerCase().replace(/\s+/g, " ").slice(0, 800),
+  ];
+  return hashValue(stableParts.join("|"));
 }
 
-async function sendEmail(payload) {
-  if (!RESEND_API_KEY) {
-    return { sent: false, reason: "RESEND_API_KEY is not configured" };
-  }
+async function findAppId(slug) {
+  if (!slug) return null;
+  const response = await supabaseFetch(
+    `/rest/v1/apps?slug=eq.${encodeURIComponent(slug)}&select=id&limit=1`,
+  );
+  if (!response.ok) return null;
+  const apps = await response.json();
+  return apps[0]?.id || null;
+}
 
-  const text = [
-    `App: ${payload.app_name || payload.app_slug || "General"}`,
-    `Type: ${payload.kind}`,
-    `Name: ${payload.name || "Guest"}`,
-    `Email: ${payload.email || "Not provided"}`,
-    `Source: ${payload.source_url || "Not provided"}`,
-    "",
-    payload.message,
-  ].join("\n");
-
-  const response = await fetch("https://api.resend.com/emails", {
+async function checkRateLimit(ipHash, email) {
+  const limit = Number(process.env.SUGGESTION_RATE_LIMIT || 5);
+  const windowSeconds = Number(process.env.SUGGESTION_RATE_WINDOW_SECONDS || 600);
+  const response = await supabaseFetch("/rest/v1/rpc/check_suggestion_rate_limit", {
     method: "POST",
-    headers: {
-      authorization: `Bearer ${RESEND_API_KEY}`,
-      "content-type": "application/json",
-    },
+    headers: { "content-type": "application/json" },
     body: JSON.stringify({
-      from: FROM_EMAIL,
-      to: [SUPPORT_EMAIL],
-      reply_to: payload.email || undefined,
-      subject: `[Art Style Apps] ${payload.subject || "New suggestion"}`,
-      text,
+      p_ip_hash: ipHash,
+      p_email: email,
+      p_window_seconds: windowSeconds,
+      p_limit: limit,
     }),
   });
 
   if (!response.ok) {
-    return { sent: false, reason: await response.text() };
+    throw new Error(await parseSupabaseError(response, "Suggestion rate limit is not ready."));
   }
 
-  return { sent: true };
+  const rows = await response.json();
+  return rows[0] || { allowed: true, remaining: limit, reset_at: null };
+}
+
+async function readDuplicate(dedupeKey) {
+  const response = await supabaseFetch(
+    `/rest/v1/suggestions?dedupe_key=eq.${encodeURIComponent(dedupeKey)}&select=id,created_at&limit=1`,
+  );
+  if (!response.ok) return null;
+  const rows = await response.json();
+  return rows[0] || null;
+}
+
+async function notifySuggestion(suggestionId) {
+  const response = await fetch(`${SUPABASE_URL}/functions/v1/notify-suggestion`, {
+    method: "POST",
+    headers: {
+      apikey: SUPABASE_SERVER_KEY,
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({ suggestion_id: suggestionId }),
+  });
+
+  let body = null;
+  try {
+    body = await response.json();
+  } catch {
+    body = { error: await response.text() };
+  }
+
+  return {
+    ok: response.ok,
+    status: response.status,
+    body,
+  };
 }
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
-    res.status(405).json({ ok: false, message: "Method not allowed" });
+    json(res, 405, { ok: false, message: "Method not allowed" });
     return;
   }
 
-  const payload = {
-    app_slug: cleanString(req.body?.app_slug, 120),
-    app_name: cleanString(req.body?.app_name, 160),
-    name: cleanString(req.body?.name, 160),
-    email: cleanString(req.body?.email, 320),
-    kind: cleanString(req.body?.kind, 40) || "feature",
-    subject: cleanString(req.body?.subject, 200),
-    message: cleanString(req.body?.message, 4000),
-    source_url: cleanString(req.body?.source_url, 600),
-  };
-
-  if (!payload.message || payload.message.length < 3) {
-    res.status(400).json({ ok: false, message: "Message is too short." });
-    return;
-  }
-
-  if (!isEmail(payload.email)) {
-    res.status(400).json({ ok: false, message: "Email is invalid." });
-    return;
-  }
-
-  if (!SUPABASE_URL || !SUPABASE_SECRET_KEY) {
-    res.status(503).json({
+  if (!hasSupabaseConfig()) {
+    json(res, 503, {
       ok: false,
       message: "Suggestion API needs SUPABASE_URL and SUPABASE_SECRET_KEY on Vercel.",
     });
     return;
   }
 
-  let appId = null;
-  if (payload.app_slug) {
-    const appResponse = await fetch(
-      `${SUPABASE_URL}/rest/v1/apps?slug=eq.${encodeURIComponent(payload.app_slug)}&select=id&limit=1`,
-      {
-        headers: {
-          apikey: SUPABASE_SECRET_KEY,
-        },
-      },
-    );
-
-    if (appResponse.ok) {
-      const apps = await appResponse.json();
-      appId = apps[0]?.id || null;
-    }
+  let body;
+  try {
+    body = await readJsonBody(req);
+  } catch {
+    json(res, 400, { ok: false, message: "Invalid JSON body." });
+    return;
   }
 
-  const suggestionResponse = await fetch(`${SUPABASE_URL}/rest/v1/suggestions`, {
+  if (cleanString(body?.company, 120) || cleanString(body?.website, 120)) {
+    json(res, 200, { ok: true, message: "Suggestion received." });
+    return;
+  }
+
+  const payload = {
+    app_slug: cleanString(body?.app_slug, 120),
+    app_name: cleanString(body?.app_name, 160),
+    name: cleanString(body?.name, 160),
+    email: cleanString(body?.email, 320)?.toLowerCase() || null,
+    kind: normalizeKind(body?.kind),
+    subject: cleanString(body?.subject, 200),
+    message: cleanString(body?.message, 4000),
+    source_url: cleanString(body?.source_url, 600),
+  };
+
+  if (!payload.message || payload.message.length < 3) {
+    json(res, 400, { ok: false, message: "Message is too short." });
+    return;
+  }
+
+  if (!isEmail(payload.email)) {
+    json(res, 400, { ok: false, message: "Email is invalid." });
+    return;
+  }
+
+  const ipHash = hashValue(getClientIp(req));
+  const userAgentHash = hashValue(getHeader(req, "user-agent"));
+  const dedupeKey = duplicateKey(payload, ipHash);
+
+  let rate;
+  try {
+    rate = await checkRateLimit(ipHash, payload.email);
+  } catch (error) {
+    json(res, 503, { ok: false, message: error.message });
+    return;
+  }
+
+  if (!rate.allowed) {
+    json(res, 429, {
+      ok: false,
+      message: "Too many suggestions. Please try again soon.",
+      reset_at: rate.reset_at,
+    });
+    return;
+  }
+
+  const appId = await findAppId(payload.app_slug);
+  const suggestionResponse = await supabaseFetch("/rest/v1/suggestions", {
     method: "POST",
     headers: {
-      apikey: SUPABASE_SECRET_KEY,
       "content-type": "application/json",
       prefer: "return=representation",
     },
@@ -119,31 +183,45 @@ export default async function handler(req, res) {
       message: payload.message,
       source_url: payload.source_url,
       email_to: SUPPORT_EMAIL,
+      ip_hash: ipHash,
+      user_agent_hash: userAgentHash,
+      dedupe_key: dedupeKey,
       metadata: {
         app_slug: payload.app_slug,
         app_name: payload.app_name,
+        origin: getHeader(req, "origin") || null,
       },
     }),
   });
 
   if (!suggestionResponse.ok) {
-    let detail = "Supabase schema is not ready.";
-    try {
-      const error = await suggestionResponse.json();
-      detail = error.message || detail;
-    } catch {
-      detail = await suggestionResponse.text();
+    const detail = await parseSupabaseError(suggestionResponse, "Supabase schema is not ready.");
+    if (suggestionResponse.status === 409 || detail.toLowerCase().includes("duplicate")) {
+      const duplicate = await readDuplicate(dedupeKey);
+      json(res, 200, {
+        ok: true,
+        duplicate: true,
+        suggestion_id: duplicate?.id || null,
+        message: "Suggestion was already received.",
+      });
+      return;
     }
-    res.status(503).json({ ok: false, message: detail });
+    json(res, 503, { ok: false, message: detail });
     return;
   }
 
-  const email = await sendEmail(payload);
-  res.status(200).json({
+  const suggestions = await suggestionResponse.json();
+  const suggestion = suggestions[0];
+  const notification = suggestion?.id ? await notifySuggestion(suggestion.id) : null;
+  const emailSent = Boolean(notification?.body?.email_sent);
+
+  json(res, 200, {
     ok: true,
-    email_sent: email.sent,
-    message: email.sent
+    suggestion_id: suggestion?.id || null,
+    email_sent: emailSent,
+    rate_remaining: rate.remaining,
+    message: emailSent
       ? "Suggestion received and emailed."
-      : "Suggestion received. Email provider is not configured yet.",
+      : "Suggestion received. Email delivery is pending provider configuration.",
   });
 }

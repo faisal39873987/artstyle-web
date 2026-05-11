@@ -14,6 +14,7 @@ type SuggestionRow = {
   source_url: string | null;
   email_to: string;
   created_at: string;
+  notified_at: string | null;
   apps: { name: string } | null;
 };
 
@@ -32,6 +33,27 @@ function isUuid(value: unknown): value is string {
     typeof value === "string" &&
     /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value)
   );
+}
+
+async function markNotification(
+  supabaseUrl: string,
+  secretKey: string,
+  suggestionId: string,
+  sent: boolean,
+  error?: string,
+) {
+  await fetch(`${supabaseUrl}/rest/v1/rpc/mark_suggestion_notification`, {
+    method: "POST",
+    headers: {
+      apikey: secretKey,
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      p_suggestion_id: suggestionId,
+      p_sent: sent,
+      p_error: error ?? null,
+    }),
+  }).catch(() => undefined);
 }
 
 Deno.serve(async (req) => {
@@ -68,7 +90,7 @@ Deno.serve(async (req) => {
   }
 
   const suggestionResponse = await fetch(
-    `${supabaseUrl}/rest/v1/suggestions?id=eq.${payload.suggestion_id}&select=id,name,email,kind,subject,message,source_url,email_to,created_at,apps(name)`,
+    `${supabaseUrl}/rest/v1/suggestions?id=eq.${payload.suggestion_id}&select=id,name,email,kind,subject,message,source_url,email_to,created_at,notified_at,apps(name)`,
     {
       headers: {
         apikey: secretKey,
@@ -82,6 +104,11 @@ Deno.serve(async (req) => {
   }
 
   const suggestion = (await suggestionResponse.json()) as SuggestionRow;
+
+  if (suggestion.notified_at) {
+    return json({ ok: true, email_sent: true, already_notified: true });
+  }
+
   const appName = suggestion.apps?.name ?? "General";
   const subject = suggestion.subject?.trim() || `New ${suggestion.kind} suggestion`;
   const toEmail = suggestion.email_to || supportEmail;
@@ -102,6 +129,13 @@ Deno.serve(async (req) => {
   ].join("\n");
 
   if (!resendApiKey) {
+    await markNotification(
+      supabaseUrl,
+      secretKey,
+      suggestion.id,
+      false,
+      "RESEND_API_KEY is not configured",
+    );
     return json({
       ok: true,
       email_sent: false,
@@ -127,8 +161,10 @@ Deno.serve(async (req) => {
 
   if (!emailResponse.ok) {
     const errorText = await emailResponse.text();
+    await markNotification(supabaseUrl, secretKey, suggestion.id, false, errorText);
     return json({ error: "Email provider failed", details: errorText }, 502);
   }
 
+  await markNotification(supabaseUrl, secretKey, suggestion.id, true);
   return json({ ok: true, email_sent: true });
 });

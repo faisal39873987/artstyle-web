@@ -3,6 +3,7 @@
 - Create Supabase project.
 - Apply `supabase/migrations/20260511173000_initial_backend.sql`.
 - Apply `supabase/migrations/20260511174000_seed_artstyle_catalog.sql`.
+- Apply `supabase/migrations/20260512090000_backend_round_five.sql`.
 - Set Auth Site URL to production Vercel URL.
 - Add redirect URLs for localhost, Vercel preview, and production.
 - Enable Google provider.
@@ -13,12 +14,22 @@
   - `RESEND_API_KEY`
   - `FROM_EMAIL`
 - Deploy `notify-suggestion` with `--no-verify-jwt` or keep `[functions.notify-suggestion].verify_jwt = false`.
-- Enable Google and Apple providers in Supabase Auth; current hosted settings still show both disabled.
+- Add Vercel environment variables:
+  - `SUGGESTION_HASH_SALT`
+  - `SUGGESTION_RATE_LIMIT`
+  - `SUGGESTION_RATE_WINDOW_SECONDS`
+- Enable Google and Apple providers in Supabase Auth.
+- Promote the first real owner profile from SQL editor after signup.
 - Test anon:
   - can read public apps.
   - can insert suggestions.
   - cannot read private suggestions.
   - cannot read blocked ROM rows.
+- Test API:
+  - `/api/health` returns `ok: true`.
+  - `/api/apps` returns public catalog rows.
+  - `/api/backend-status` returns the five backend tasks.
+  - `/api/suggestions` blocks repeated spam submissions.
 - Test authenticated:
   - can read own profile.
   - can create play session only for legal playable ROMs.

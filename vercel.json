@@ -23,8 +23,24 @@
       "destination": "/:path*"
     },
     {
+      "source": "/apps/:slug",
+      "destination": "/"
+    },
+    {
+      "source": "/team",
+      "destination": "/"
+    },
+    {
+      "source": "/plan",
+      "destination": "/"
+    },
+    {
+      "source": "/backend",
+      "destination": "/"
+    },
+    {
       "source": "/:path*",
-      "destination": "/index.html"
+      "destination": "/"
     }
   ],
   "headers": [

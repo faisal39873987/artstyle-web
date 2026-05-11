@@ -2,6 +2,8 @@
 
 Sends a newly stored suggestion to the support inbox.
 
+The function is idempotent: if `notified_at` already exists on the suggestion row, it returns success without sending again. It also records notification attempts and provider errors through `public.mark_suggestion_notification`.
+
 Required secrets:
 
 ```sh
