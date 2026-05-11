@@ -44,7 +44,10 @@ Deno.serve(async (req) => {
   }
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
-  const secretKey = Deno.env.get("SUPABASE_SECRET_KEY") ?? Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  const secretKey =
+    Deno.env.get("ARTSTYLE_SUPABASE_SECRET_KEY") ??
+    Deno.env.get("SUPABASE_SECRET_KEY") ??
+    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
   const resendApiKey = Deno.env.get("RESEND_API_KEY");
   const supportEmail = Deno.env.get("SUPPORT_EMAIL") ?? "opensea3987@gmail.com";
   const fromEmail = Deno.env.get("FROM_EMAIL") ?? "Art Style Apps <onboarding@resend.dev>";

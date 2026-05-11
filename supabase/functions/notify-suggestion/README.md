@@ -7,7 +7,7 @@ Required secrets:
 ```sh
 supabase secrets set \
   SUPPORT_EMAIL=opensea3987@gmail.com \
-  SUPABASE_SECRET_KEY=... \
+  ARTSTYLE_SUPABASE_SECRET_KEY=... \
   RESEND_API_KEY=... \
   FROM_EMAIL="Art Style Apps <hello@your-domain.com>"
 ```

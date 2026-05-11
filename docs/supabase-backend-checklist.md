@@ -8,7 +8,7 @@
 - Enable Google provider.
 - Enable Apple provider only after Services ID and Apple secret are ready.
 - Set Edge Function secrets:
-  - `SUPABASE_SECRET_KEY`
+  - `ARTSTYLE_SUPABASE_SECRET_KEY`
   - `SUPPORT_EMAIL`
   - `RESEND_API_KEY`
   - `FROM_EMAIL`
