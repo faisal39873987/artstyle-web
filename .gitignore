@@ -1,0 +1,21 @@
+.DS_Store
+._*
+**/._*
+.AppleDouble
+
+.env
+.env.*
+!.env.example
+
+.vercel
+.supabase
+node_modules/
+build/
+dist/
+
+# Keep commercial or unverified ROM binaries out of public deployments.
+roms/*
+!roms/.gitkeep
+*.srm
+*.state
+*.sav

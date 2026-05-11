@@ -1,0 +1,29 @@
+# Supabase Backend Checklist
+
+- Create Supabase project.
+- Apply `supabase/migrations/20260511173000_initial_backend.sql`.
+- Apply `supabase/migrations/20260511174000_seed_artstyle_catalog.sql`.
+- Set Auth Site URL to production Vercel URL.
+- Add redirect URLs for localhost, Vercel preview, and production.
+- Enable Google provider.
+- Enable Apple provider only after Services ID and Apple secret are ready.
+- Set Edge Function secrets:
+  - `SUPABASE_SERVICE_ROLE_KEY`
+  - `SUPPORT_EMAIL`
+  - `RESEND_API_KEY`
+  - `FROM_EMAIL`
+- Deploy `notify-suggestion`.
+- Test anon:
+  - can read public apps.
+  - can insert suggestions.
+  - cannot read private suggestions.
+  - cannot read blocked ROM rows.
+- Test authenticated:
+  - can read own profile.
+  - can create play session only for legal playable ROMs.
+- Test team/admin:
+  - can manage apps, releases, tasks, and suggestions.
+- Before Vercel production:
+  - remove or quarantine `roms/*`.
+  - remove tracked `._*`.
+  - confirm `/roms/*` redirects to `/legal/roms-unavailable.html`.
