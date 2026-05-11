@@ -16,6 +16,8 @@ dist/
 # Keep commercial or unverified ROM binaries out of public deployments.
 roms/*
 !roms/.gitkeep
+images/covers/*
+!images/covers/.gitkeep
 *.srm
 *.state
 *.sav

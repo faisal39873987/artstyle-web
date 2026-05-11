@@ -6,6 +6,11 @@
       "source": "/roms/:path*",
       "destination": "/legal/roms-unavailable.html",
       "permanent": false
+    },
+    {
+      "source": "/images/covers/:path*",
+      "destination": "/legal/roms-unavailable.html",
+      "permanent": false
     }
   ],
   "rewrites": [
