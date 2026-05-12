@@ -31,7 +31,7 @@ export default async function handler(req, res) {
     const [statusRows, settingsRows, workstreamRows] = await Promise.all([
       readJson("/rest/v1/backend_public_status?select=*&limit=1", "Backend status view is not ready."),
       readJson(
-        "/rest/v1/site_settings?key=in.(auth_plan,backend_round_five,rom_policy,support_email)&select=key,value,is_public&order=key.asc",
+        "/rest/v1/site_settings?key=in.(auth_plan,backend_round_five,deployment_verification,rom_policy,support_email)&select=key,value,is_public&order=key.asc",
         "Site settings are not ready.",
       ),
       readJson("/rest/v1/workstreams?key=eq.supabase-backend&select=id,key,name,status,target_date&limit=1", "Workstreams are not ready."),

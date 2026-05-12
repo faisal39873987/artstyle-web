@@ -641,6 +641,12 @@ h1 {
   color: var(--rose);
 }
 
+.status-box.warning {
+  border-color: #f4d17a;
+  background: #fff8e7;
+  color: #835c05;
+}
+
 .empty {
   padding: 28px;
   border: 1px dashed var(--line);

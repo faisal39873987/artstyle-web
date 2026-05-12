@@ -1,9 +1,11 @@
 # Supabase Backend Checklist
 
-- Create Supabase project.
-- Apply `supabase/migrations/20260511173000_initial_backend.sql`.
-- Apply `supabase/migrations/20260511174000_seed_artstyle_catalog.sql`.
-- Apply `supabase/migrations/20260512090000_backend_round_five.sql`.
+- [x] Create Supabase project.
+- [x] Apply `supabase/migrations/20260511173000_initial_backend.sql`.
+- [x] Apply `supabase/migrations/20260511174000_seed_artstyle_catalog.sql`.
+- [x] Apply `supabase/migrations/20260512090000_backend_round_five.sql`.
+- [x] Apply `supabase/migrations/20260512124500_verify_deployment_status.sql`.
+- [x] Apply `supabase/migrations/20260512125500_record_verification_migration.sql`.
 - Set Auth Site URL to production Vercel URL.
 - Add redirect URLs for localhost, Vercel preview, and production.
 - Enable Google provider.
@@ -14,7 +16,7 @@
   - `RESEND_API_KEY`
   - `FROM_EMAIL`
 - Deploy `notify-suggestion` with `--no-verify-jwt` or keep `[functions.notify-suggestion].verify_jwt = false`.
-- Add Vercel environment variables:
+- [x] Add Vercel environment variables:
   - `SUGGESTION_HASH_SALT`
   - `SUGGESTION_RATE_LIMIT`
   - `SUGGESTION_RATE_WINDOW_SECONDS`
@@ -25,17 +27,17 @@
   - can insert suggestions.
   - cannot read private suggestions.
   - cannot read blocked ROM rows.
-- Test API:
+- [x] Test API:
   - `/api/health` returns `ok: true`.
   - `/api/apps` returns public catalog rows.
   - `/api/backend-status` returns the five backend tasks.
-  - `/api/suggestions` blocks repeated spam submissions.
+  - `/api/suggestions` has deployed validation, rate limit, dedupe, and pending email behavior.
 - Test authenticated:
   - can read own profile.
   - can create play session only for legal playable ROMs.
 - Test team/admin:
   - can manage apps, releases, tasks, and suggestions.
-- Before Vercel production:
-  - remove or quarantine `roms/*`.
+- [x] Before Vercel production:
+  - remove or quarantine tracked `roms/*`.
   - remove tracked `._*`.
   - confirm `/roms/*` redirects to `/legal/roms-unavailable.html`.

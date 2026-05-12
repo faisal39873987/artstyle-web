@@ -119,10 +119,11 @@ const team = [
 ];
 
 const plan = [
-  ["Now", "Stabilize public web portal", "Use app-owned assets, keep unverified ROM files private, and publish a clean catalog experience."],
-  ["Backend", "Apply Supabase migrations", "Run SQL migrations on the hosted project, seed apps, enable RLS, configure buckets, and deploy suggestions."],
-  ["Frontend", "Recover Flutter source", "Move catalog, login, detail pages, suggestions, and visitor flow into Flutter source when lib/pubspec are available."],
-  ["Release", "Vercel and store alignment", "Connect GitHub to Vercel, set environment variables, test mobile layouts, and verify store links."],
+  ["Done", "GitHub and Vercel production link", "GitHub main is connected to the Vercel project, production is public on artstyle-web.vercel.app, and raw deployment URLs stay SSO protected."],
+  ["Done", "Supabase migrations and APIs", "The hosted Supabase project has the current migrations, public catalog view, health API, backend status API, and safe ROM redirect checks."],
+  ["Review", "Suggestion routing", "Suggestions save through Vercel and Supabase. Real outbound email waits for RESEND_API_KEY in Supabase secrets."],
+  ["Manual", "OAuth providers", "Google and Apple sign-in remain dashboard work because each provider needs owner OAuth credentials and redirect approval."],
+  ["Next", "Flutter source recovery", "Move the portal flow into Flutter source after lib and pubspec are available; this export is currently the deployed web surface."],
 ];
 
 let state = { apps: fallbackApps, source: "local", category: "All", query: "" };
@@ -461,16 +462,21 @@ async function renderBackend() {
     health.textContent = data.message;
     if (statusResponse.ok && statusData.ok) {
       const status = statusData.status || {};
+      const deployment = statusData.settings?.deployment_verification || {};
       const rows = [
-        ["Public apps", status.public_apps],
-        ["Release rows", status.release_rows],
-        ["Team members", status.public_team_members],
-        ["Suggestions 7 days", status.suggestions_last_7_days],
-        ["Email provider", statusData.email_provider_configured ? "Configured" : "Pending Resend key"],
+        ["Production URL", deployment.production_url || window.location.origin, "success"],
+        ["GitHub", deployment.github?.connected ? `${deployment.github.repo} / ${deployment.github.branch}` : "Not verified", deployment.github?.connected ? "success" : "error"],
+        ["Vercel", deployment.vercel?.connected ? deployment.vercel.project : "Not verified", deployment.vercel?.connected ? "success" : "error"],
+        ["Supabase", deployment.supabase?.connected ? deployment.supabase.project_ref : "Not verified", deployment.supabase?.connected ? "success" : "error"],
+        ["Public apps", status.public_apps, "success"],
+        ["Release rows", status.release_rows, "success"],
+        ["Team members", status.public_team_members, "success"],
+        ["Suggestions 7 days", status.suggestions_last_7_days, "success"],
+        ["Email provider", statusData.email_provider_configured ? "Configured" : "Pending Resend key", statusData.email_provider_configured ? "success" : "warning"],
       ];
       health.innerHTML = `
         <div class="stack">
-          ${rows.map(([label, value]) => `<div class="status-box success"><strong>${esc(label)}</strong> ${esc(value ?? 0)}</div>`).join("")}
+          ${rows.map(([label, value, tone]) => `<div class="status-box ${esc(tone)}"><strong>${esc(label)}</strong> ${esc(value ?? 0)}</div>`).join("")}
         </div>
       `;
       tasks.innerHTML = statusData.backend_tasks

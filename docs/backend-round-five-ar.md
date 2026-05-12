@@ -29,3 +29,13 @@
 ## ملاحظة تشغيل
 
 الإيميل لن يخرج فعليًا حتى يتم ضبط `RESEND_API_KEY` داخل Supabase secrets. بدونها يتم حفظ الاقتراح ويظهر أن إرسال البريد pending.
+
+## حالة التحقق
+
+تم التحقق من الجولة الخامسة على الإنتاج بتاريخ 2026-05-12:
+
+- `/api/health` يرجع `ok: true`.
+- `/api/apps` يرجع كتالوج Supabase العام.
+- `/api/backend-status` يرجع الخطة وحالة المهام.
+- GitHub متصل بـ Vercel على branch `main`.
+- Production alias العام يعمل على `https://artstyle-web.vercel.app`.
