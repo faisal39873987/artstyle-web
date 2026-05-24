@@ -597,16 +597,16 @@ export const MEDIA_LIBRARY = PRODUCTS.flatMap((product) =>
 );
 
 export const TEAM = [
-  ["FA", "Faisal Al Mansoori", "مالك المنتج", "Product Owner", "اعتماد الألعاب والقرار النهائي للنشر.", "Approves games and owns final release decisions."],
-  ["RA", "Reem Al Nuaimi", "مديرة التصميم", "Design Lead", "تحافظ على شكل صفحة اللعب وتجربة الهاتف.", "Owns the play page look and mobile experience."],
-  ["OH", "Omar Haddad", "مهندس واجهة أول", "Senior Frontend Engineer", "يبني مشغل الويب، الفلاتر، وسلوك الكيبورد.", "Builds the web player, filters, and keyboard behavior."],
-  ["SK", "Sara Al Ketbi", "مصممة تجربة المستخدم", "UX Designer", "تراجع خطوات اللاعب من الكتالوج إلى اللعب.", "Reviews the player journey from catalog to gameplay."],
-  ["LY", "Lina Youssef", "كاتبة محتوى", "Content Strategist", "تكتب نصوص الحقوق، الحالات، ورسائل الخطأ.", "Writes rights copy, status labels, and error messages."],
-  ["KD", "Khalid Al Darmaki", "مهندس Supabase", "Supabase Engineer", "يجهز الربط المستقبلي للحسابات والحفظ.", "Prepares future account and save-state integration."],
-  ["MF", "Mariam Al Falasi", "مسؤولة الجودة", "QA Lead", "تفحص الموبايل، الديسكتوب، والملفات المختارة.", "Tests mobile, desktop, and selected-file playback."],
-  ["YN", "Yara Nasser", "عمليات المتاجر", "Store Operations", "تربط Android والسياسات ومتطلبات المراجعة.", "Aligns Android links, policies, and review requirements."],
-  ["AB", "Ahmed Al Balushi", "أمن وامتثال", "Security and Compliance", "يتأكد أن الرومات العامة مرخصة وغير مفهرسة.", "Ensures public ROMs are licensed and not indexed."],
-  ["NH", "Nour Al Hammadi", "دعم العملاء", "Customer Support", "يجهز إجابات مشاكل التشغيل والملفات.", "Prepares support answers for playback and file issues."],
+  ["LC", "Liam Carter", "مالك المنتج", "Product Owner", "اعتماد الألعاب والقرار النهائي للنشر.", "Approves games and owns final release decisions."],
+  ["EM", "Emma Morgan", "مديرة التصميم", "Design Lead", "تحافظ على شكل صفحة اللعب وتجربة الهاتف.", "Owns the play page look and mobile experience."],
+  ["NB", "Noah Bennett", "مهندس واجهة أول", "Senior Frontend Engineer", "يبني مشغل الويب، الفلاتر، وسلوك الكيبورد.", "Builds the web player, filters, and keyboard behavior."],
+  ["SO", "Sofia Owen", "مصممة تجربة المستخدم", "UX Designer", "تراجع خطوات اللاعب من الكتالوج إلى اللعب.", "Reviews the player journey from catalog to gameplay."],
+  ["OR", "Olivia Reed", "كاتبة محتوى", "Content Strategist", "تكتب نصوص الحقوق، الحالات، ورسائل الخطأ.", "Writes rights copy, status labels, and error messages."],
+  ["DW", "Daniel Wright", "مهندس Supabase", "Supabase Engineer", "يجهز الربط المستقبلي للحسابات والحفظ.", "Prepares future account and save-state integration."],
+  ["MT", "Maya Turner", "مسؤولة الجودة", "QA Lead", "تفحص الموبايل، الديسكتوب، والملفات المختارة.", "Tests mobile, desktop, and selected-file playback."],
+  ["JW", "James Walker", "عمليات المتاجر", "Store Operations", "تربط Android والسياسات ومتطلبات المراجعة.", "Aligns Android links, policies, and review requirements."],
+  ["AC", "Ava Collins", "أمن وامتثال", "Security and Compliance", "يتأكد أن الرومات العامة مرخصة وغير مفهرسة.", "Ensures public ROMs are licensed and not indexed."],
+  ["CH", "Chloe Harper", "دعم العملاء", "Customer Support", "يجهز إجابات مشاكل التشغيل والملفات.", "Prepares support answers for playback and file issues."],
 ].map(([initials, name, ar, en, arFocus, enFocus]) => ({
   initials,
   name,
