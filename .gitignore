@@ -7,15 +7,20 @@
 .env.*
 !.env.example
 
-.vercel
 .supabase
 node_modules/
 build/
 dist/
+test-results/
 
 # Keep commercial or unverified ROM binaries out of public deployments.
+assets/all game/
 roms/*
 !roms/.gitkeep
+assets/playable-roms/*
+!assets/playable-roms/.gitkeep
+!assets/playable-roms/README.md
+!assets/playable-roms/art-style-demo.nes
 images/covers/*
 !images/covers/.gitkeep
 *.srm

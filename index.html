@@ -1,39 +1,113 @@
 <!doctype html>
-<html lang="en">
+<html lang="ar" dir="rtl">
   <head>
+    <base href="/" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
     <meta
       name="description"
-      content="Art Style Apps product portal for mobile apps, release status, team planning, and visitor suggestions."
+      content="Art Style Apps is a bilingual Arabic and English platform for apps, games, support, policies, accounts, and future dashboards."
     />
+    <meta name="theme-color" content="#f6f8f3" />
+    <meta name="application-name" content="Art Style Apps" />
+    <meta name="apple-mobile-web-app-title" content="Art Style Apps" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+
+    <meta property="og:site_name" content="Art Style Apps" />
+    <meta property="og:title" content="Art Style Apps" />
+    <meta
+      property="og:description"
+      content="A production-ready bilingual portal for apps and games, built for Namecheap shared hosting."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://artstyle.live/" />
+    <meta property="og:image" content="https://artstyle.live/assets/images/polar_1.png" />
+    <meta property="og:locale" content="ar_AE" />
+    <meta property="og:locale:alternate" content="en_US" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Art Style Apps" />
+    <meta
+      name="twitter:description"
+      content="Arabic and English static platform for apps, games, policies, support, login, and dashboards."
+    />
+    <meta name="twitter:image" content="https://artstyle.live/assets/images/polar_1.png" />
+
+    <link rel="canonical" href="https://artstyle.live/" />
+    <link rel="alternate" hreflang="ar" href="https://artstyle.live/?lang=ar" />
+    <link rel="alternate" hreflang="en" href="https://artstyle.live/?lang=en" />
+    <link rel="alternate" hreflang="x-default" href="https://artstyle.live/" />
+    <link rel="icon" href="/assets/icons/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.svg" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="preload" href="/assets/css/main.css" as="style" />
+    <link rel="modulepreload" href="/assets/js/main.js" />
+    <link rel="stylesheet" href="/assets/css/main.css" />
     <title>Art Style Apps</title>
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" />
-    <link rel="stylesheet" href="/assets/site/styles.css" />
   </head>
   <body>
-    <div class="app-shell">
-      <header class="topbar">
-        <a class="brand" href="/" data-link>
-          <span class="brand-mark">AS</span>
-          <span class="brand-copy">
+    <a class="skip-link" href="#view" data-i18n="skipContent">Skip to content</a>
+    <div class="site-shell">
+      <header class="site-header" data-shell-header>
+        <a class="brand" href="/" data-link aria-label="Art Style Apps">
+          <span class="brand-mark" aria-hidden="true">AS</span>
+          <span>
             <strong>Art Style Apps</strong>
-            <small>Product Library</small>
+            <small data-i18n="brandLine">استوديو تطبيقات وألعاب</small>
           </span>
         </a>
-        <nav class="nav">
-          <a href="/" data-link>Apps</a>
-          <a href="/team" data-link>Team</a>
-          <a href="/plan" data-link>Plan</a>
-          <a href="/backend" data-link>Backend</a>
+
+        <button
+          class="menu-button"
+          type="button"
+          data-menu
+          aria-label="Open navigation"
+          aria-expanded="false"
+          aria-controls="site-nav"
+        >
+          <span></span>
+          <span></span>
+        </button>
+
+        <nav class="site-nav" id="site-nav" data-nav aria-label="Primary navigation">
+          <a href="/" data-link data-i18n="navHome">الرئيسية</a>
+          <a href="/products" data-link data-i18n="navProducts">المنتجات</a>
+          <a href="/apps" data-link data-i18n="navApps">التطبيقات</a>
+          <a href="/games" data-link data-i18n="navGames">الألعاب</a>
+          <a href="/arcade" data-link data-i18n="navArcade">الأركيد</a>
+          <a href="/playroom" data-link data-i18n="navPlayroom">غرفة اللعب</a>
+          <a href="/team" data-link data-i18n="navTeam">الفريق</a>
+          <a href="/policies" data-link data-i18n="navPolicies">السياسات</a>
+          <a href="/support" data-link data-i18n="navSupport">الدعم</a>
         </nav>
-        <div class="auth-actions">
-          <button class="icon-button" type="button" data-auth="google" title="Continue with Google" aria-label="Continue with Google">G</button>
-          <button class="icon-button" type="button" data-auth="apple" title="Continue with Apple" aria-label="Continue with Apple">A</button>
+
+        <div class="header-actions">
+          <button class="icon-button" type="button" data-theme-toggle aria-label="Toggle color theme">
+            <span data-theme-icon aria-hidden="true">☾</span>
+          </button>
+          <button class="text-button" type="button" data-lang-toggle aria-label="Switch language">EN</button>
+          <a class="button dark" href="/login" data-link data-i18n="navLogin">الدخول</a>
         </div>
       </header>
-      <main id="view" tabindex="-1"></main>
+
+      <main id="view" tabindex="-1" aria-live="polite"></main>
+
+      <footer class="site-footer">
+        <div>
+          <strong>Art Style Apps</strong>
+          <p data-i18n="footerCopy">بوابة ثابتة وسريعة تعمل على Namecheap بدون Node.js.</p>
+        </div>
+        <nav class="footer-links" data-footer-nav aria-label="Footer navigation">
+          <a href="/press-kit" data-link data-i18n="pressKit">الملف الإعلامي</a>
+          <a href="/privacy" data-link data-i18n="privacy">الخصوصية</a>
+          <a href="/terms" data-link data-i18n="terms">الشروط</a>
+          <a href="/support" data-link data-i18n="support">الدعم</a>
+        </nav>
+      </footer>
     </div>
-    <script type="module" src="/assets/site/portal.js"></script>
+
+    <script type="module" src="/assets/js/main.js"></script>
   </body>
 </html>

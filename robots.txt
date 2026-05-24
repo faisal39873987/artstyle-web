@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /dashboard/
+Disallow: /roms
+Disallow: /roms/
+
+Sitemap: https://artstyle.live/sitemap.xml

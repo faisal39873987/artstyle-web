@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://artstyle.live/</loc>
+    <lastmod>2026-05-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://artstyle.live/?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://artstyle.live/?lang=en" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://artstyle.live/" />
+  </url>
+  <url>
+    <loc>https://artstyle.live/apps</loc>
+    <lastmod>2026-05-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://artstyle.live/apps?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://artstyle.live/apps?lang=en" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://artstyle.live/apps" />
+  </url>
+  <url>
+    <loc>https://artstyle.live/products</loc>
+    <lastmod>2026-05-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://artstyle.live/products?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://artstyle.live/products?lang=en" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://artstyle.live/products" />
+  </url>
+  <url>
+    <loc>https://artstyle.live/games</loc>
+    <lastmod>2026-05-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://artstyle.live/games?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://artstyle.live/games?lang=en" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://artstyle.live/games" />
+  </url>
+  <url>
+    <loc>https://artstyle.live/arcade</loc>
+    <lastmod>2026-05-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://artstyle.live/arcade?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://artstyle.live/arcade?lang=en" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://artstyle.live/arcade" />
+  </url>
+  <url>
+    <loc>https://artstyle.live/team</loc>
+    <lastmod>2026-05-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://artstyle.live/team?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://artstyle.live/team?lang=en" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://artstyle.live/team" />
+  </url>
+  <url>
+    <loc>https://artstyle.live/policies</loc>
+    <lastmod>2026-05-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://artstyle.live/policies?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://artstyle.live/policies?lang=en" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://artstyle.live/policies" />
+  </url>
+  <url>
+    <loc>https://artstyle.live/privacy</loc>
+    <lastmod>2026-05-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://artstyle.live/privacy?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://artstyle.live/privacy?lang=en" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://artstyle.live/privacy" />
+  </url>
+  <url>
+    <loc>https://artstyle.live/terms</loc>
+    <lastmod>2026-05-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://artstyle.live/terms?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://artstyle.live/terms?lang=en" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://artstyle.live/terms" />
+  </url>
+  <url>
+    <loc>https://artstyle.live/payments</loc>
+    <lastmod>2026-05-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://artstyle.live/payments?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://artstyle.live/payments?lang=en" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://artstyle.live/payments" />
+  </url>
+  <url>
+    <loc>https://artstyle.live/rom-policy</loc>
+    <lastmod>2026-05-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://artstyle.live/rom-policy?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://artstyle.live/rom-policy?lang=en" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://artstyle.live/rom-policy" />
+  </url>
+  <url>
+    <loc>https://artstyle.live/support</loc>
+    <lastmod>2026-05-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://artstyle.live/support?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://artstyle.live/support?lang=en" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://artstyle.live/support" />
+  </url>
+  <url>
+    <loc>https://artstyle.live/press-kit</loc>
+    <lastmod>2026-05-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://artstyle.live/press-kit?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://artstyle.live/press-kit?lang=en" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://artstyle.live/press-kit" />
+  </url>
+  <url>
+    <loc>https://artstyle.live/apps/polarvault-x</loc>
+    <lastmod>2026-05-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://artstyle.live/apps/nanny-abu-dhabi</loc>
+    <lastmod>2026-05-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://artstyle.live/apps/reemverse</loc>
+    <lastmod>2026-05-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://artstyle.live/apps/run-with-us</loc>
+    <lastmod>2026-05-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://artstyle.live/games/snake-modern-game</loc>
+    <lastmod>2026-05-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://artstyle.live/games/cube-stack-heroes</loc>
+    <lastmod>2026-05-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://artstyle.live/games/bricknova</loc>
+    <lastmod>2026-05-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://artstyle.live/games/comics-hero</loc>
+    <lastmod>2026-05-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+</urlset>
